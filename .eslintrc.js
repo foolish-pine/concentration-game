@@ -22,7 +22,6 @@ module.exports = {
         singleQuote: false,
         bracketSpacing: true,
         endOfLine: "auto",
-        trailingComma: "es5",
       },
     ],
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
