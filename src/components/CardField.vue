@@ -6,19 +6,47 @@
     </div>
     <div class="card-field">
       <div class="card-container" v-for="card in deck" :key="card.id">
-        <div class="card card--red" v-if="card.symbol === 'heart'">
+        <div
+          class="card card--red"
+          v-if="card.symbol === 'heart'"
+          v-on:click="card.isClicked = !card.isClicked"
+          v-bind:class="{
+            'card--clicked': card.isClicked,
+          }"
+        >
           <div class="card__number">{{ card.number }}</div>
           <div class="card__symbol">♥</div>
         </div>
-        <div class="card card--red" v-else-if="card.symbol === 'tile'">
+        <div
+          class="card card--red"
+          v-else-if="card.symbol === 'tile'"
+          v-on:click="card.isClicked = !card.isClicked"
+          v-bind:class="{
+            'card--clicked': card.isClicked,
+          }"
+        >
           <div class="card__number">{{ card.number }}</div>
           <div class="card__symbol">♦</div>
         </div>
-        <div class="card card--black" v-else-if="card.symbol === 'clover'">
+        <div
+          class="card card--black"
+          v-else-if="card.symbol === 'clover'"
+          v-on:click="card.isClicked = !card.isClicked"
+          v-bind:class="{
+            'card--clicked': card.isClicked,
+          }"
+        >
           <div class="card__number">{{ card.number }}</div>
           <div class="card__symbol">♣</div>
         </div>
-        <div class="card card--black" v-else>
+        <div
+          class="card card--black"
+          v-else
+          v-on:click="card.isClicked = !card.isClicked"
+          v-bind:class="{
+            'card--clicked': card.isClicked,
+          }"
+        >
           <div class="card__number">{{ card.number }}</div>
           <div class="card__symbol">♠</div>
         </div>
@@ -32,13 +60,23 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class CardField extends Vue {
-  deck: { id: number; number: number; symbol: string }[] = [];
+  deck: {
+    id: number;
+    number: number;
+    symbol: string;
+    isClicked: boolean;
+  }[] = [];
   created() {
     let id = 0;
     const symbols = ["heart", "tile", "clover", "pike"];
     for (let i = 1; i < 14; i++) {
       for (let j = 0; j < symbols.length; j++) {
-        const card = { id: id, number: i, symbol: symbols[j] };
+        const card = {
+          id: id,
+          number: i,
+          symbol: symbols[j],
+          isClicked: false,
+        };
         this.deck.push(card);
         id++;
       }
@@ -86,6 +124,12 @@ export default class CardField extends Vue {
   justify-content: center;
   flex-direction: column;
   cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.card--clicked {
+  border: 3px solid #4169e1;
 }
 
 .card--black {
