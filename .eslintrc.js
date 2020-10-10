@@ -15,7 +15,7 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": [
-      "error",
+      "warn",
       {
         printWidth: 120,
         tabWidth: 2,
