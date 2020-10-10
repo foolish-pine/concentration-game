@@ -1,18 +1,17 @@
 <template>
   <div id="app">
-    <CardField />
+    <div id="nav">
+      <router-link to="/home">ホーム画面に戻る</router-link> |
+      <router-link to="/game">Game</router-link>
+    </div>
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CardField from "./components/CardField.vue";
 
-@Component({
-  components: {
-    CardField
-  }
-})
+@Component
 export default class App extends Vue {}
 </script>
 
@@ -26,5 +25,10 @@ export default class App extends Vue {}
   margin-top: 30px;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+}
+
+#nav {
+  margin-bottom: 20px;
 }
 </style>
