@@ -88,11 +88,11 @@ export default class CardField extends Vue {
       }
     }
     // カードの配列をシャッフルする
-    // const cardNum = this.deck.length;
-    // for (let i = cardNum - 1; i >= 0; i--) {
-    //   const randomIndex = Math.floor(Math.random() * (i + 1));
-    //   [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
-    // }
+    const cardNum = this.deck.length;
+    for (let i = cardNum - 1; i >= 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
+    }
   }
   private get turnCount(): number {
     return this.$store.getters.getTurnCount;
