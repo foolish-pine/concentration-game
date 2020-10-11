@@ -91,11 +91,11 @@ export default class CardField extends Vue {
       }
     }
     // カードの配列をシャッフルする
-    const cardNum = this.deck.length;
-    for (let i = cardNum - 1; i >= 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
-    }
+    // const cardNum = this.deck.length;
+    // for (let i = cardNum - 1; i >= 0; i--) {
+    //   const randomIndex = Math.floor(Math.random() * (i + 1));
+    //   [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
+    // }
   }
   private get turnCount(): number {
     return this.$store.getters.getTurnCount;
@@ -159,12 +159,11 @@ export default class CardField extends Vue {
 
   manipulateByCPU() {
     const isCardOpen = this.deck.some(card => card.isOpen === true);
-
     // 表になっているカードがあるときはこれ以上処理を行わない
     if (isCardOpen) {
       return;
     }
-    // 一度でも表になったことがあるかつまだ誰にも取得されていないカードを抽出する
+    // まだ誰にも取得されていないかつ一度でも表になったことがあるカードを抽出する
     const revealedCards = this.deck.filter(card => !card.isRemoved && card.isRevealed);
     // 上記のカード群の数字のうち、2回以上現れるものを抽出する
     const duplicatedCardsNum = [
@@ -193,8 +192,8 @@ export default class CardField extends Vue {
       this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
     } else {
       // duplicatedCardsNumに要素が存在しないとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在しないとき)
-      // まだ誰にも取得されていないカードを抽出する
-      const notRemovedCards = this.deck.filter(card => !card.isRemoved);
+      // まだ誰にも取得されていないかつ一度も表になっていないカードを抽出する
+      const notRemovedCards = this.deck.filter(card => !card.isRemoved && !card.isRevealed);
       // notRemovedCardsをシャッフルする
       const cardNum = notRemovedCards.length;
       for (let i = cardNum - 1; i >= 0; i--) {
