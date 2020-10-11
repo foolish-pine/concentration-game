@@ -22,10 +22,10 @@ export default class Game extends Vue {}
 
 <style lang="scss" scoped>
 .button-container {
-  width: 200px;
-  margin: 50px auto 0;
   display: flex;
   flex-direction: column;
+  width: 200px;
+  margin: 50px auto 0;
   button:nth-of-type(1) {
     margin-bottom: 20px;
   }

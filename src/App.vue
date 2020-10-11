@@ -13,14 +13,14 @@ export default class App extends Vue {}
 
 <style lang="scss">
 #app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 30px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: #2c3e50;
+  text-align: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
 }
 </style>

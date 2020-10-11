@@ -23,8 +23,8 @@ export default class Home extends Vue {}
 .title {
   margin-left: -2em;
   font-family: "ＭＳ Ｐ明朝", "MS PMincho", sans-serif;
-  font-style: italic;
   font-size: 4rem;
+  font-style: italic;
   span {
     &:nth-of-type(1) {
       margin-left: 1.5em;

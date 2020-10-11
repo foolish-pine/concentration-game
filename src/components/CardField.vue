@@ -186,30 +186,30 @@ export default class CardField extends Vue {
 
 .card {
   position: relative;
+  box-sizing: border-box;
   width: 57px;
   height: 89px;
   font-size: 1.5rem;
   cursor: pointer;
   user-select: none;
-  box-sizing: border-box;
 }
 
 .card__side {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
-  transition: all 0.6s ease;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
   border: 5px solid #fff;
+  border-radius: 5px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.6s ease;
+  backface-visibility: hidden;
 }
 
 .card__side--front {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   background-color: #fff;
   transform: rotateY(180deg);
 }
@@ -228,30 +228,30 @@ export default class CardField extends Vue {
 
 .card--removed {
   position: absolute;
+  z-index: 100;
   width: 57px;
   height: 89px;
-  background-color: #eee;
   cursor: default;
-  border-radius: 5px;
+  background-color: #eee;
   border: 5px solid #fff;
-  z-index: 100;
+  border-radius: 5px;
 }
 
 .card--selected .card__side--back {
   position: relative;
   &::before {
-    content: "";
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
     bottom: 0;
-    margin: auto;
-    transform: rotate(45deg);
+    left: 0;
     width: 12px;
     height: 20px;
+    margin: auto;
+    content: "";
     border-right: 5px solid #fff;
     border-bottom: 5px solid #fff;
+    transform: rotate(45deg);
   }
 }
 

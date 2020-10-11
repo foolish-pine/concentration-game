@@ -1,0 +1,7 @@
+module.exports = {
+  extends: ["stylelint-config-recommended-scss", "stylelint-config-recess-order", "stylelint-prettier/recommended"],
+  rules: {
+    "no-descending-specificity": null,
+    "selector-pseudo-element-colon-notation": "double"
+  }
+};
