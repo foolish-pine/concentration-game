@@ -5,12 +5,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    turnCount: 0,
+    turnCount: 1,
     cardCount: 0
   },
   mutations: {
     clearCounter(state) {
-      state.turnCount = 0;
+      state.turnCount = 1;
       state.cardCount = 0;
     },
     addTurnCount(state) {
