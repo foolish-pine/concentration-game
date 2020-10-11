@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/home">ホーム画面に戻る</router-link> |
-      <router-link to="/game">Game</router-link>
-    </div>
     <router-view />
   </div>
 </template>
@@ -26,9 +22,5 @@ export default class App extends Vue {}
   display: flex;
   justify-content: center;
   flex-direction: column;
-}
-
-#nav {
-  margin-bottom: 20px;
 }
 </style>

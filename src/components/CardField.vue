@@ -2,7 +2,7 @@
   <div class="container">
     <div class="counter">
       <div class="turn-counter">経過ターン: {{ turnCount }}ターン</div>
-      <div class="card-counter">取得カード: {{ cardCount }}枚 / 52枚</div>
+      <div class="card-counter">取得カード: {{ cardCount }}枚 / 20枚</div>
       <div class="done" v-if="isGameDone">Done!!</div>
     </div>
     <div class="card-field">
@@ -103,7 +103,7 @@ export default class CardField extends Vue {
     // トランプのカードの配列を生成する
     let id = 0;
     const symbols = ["heart", "tile", "clover", "pike"];
-    for (let i = 1; i < 14; i++) {
+    for (let i = 1; i < 6; i++) {
       for (let j = 0; j < symbols.length; j++) {
         const card = {
           id: id,
@@ -168,7 +168,7 @@ export default class CardField extends Vue {
         this.deck[secondSelectedCardIndex].isOpen = false;
         this.deck[firstSelectedCardIndex].isRemoved = true;
         this.deck[secondSelectedCardIndex].isRemoved = true;
-      }, 2000);
+      }, 1500);
       // すべてのカードを取得したときゲーム終了
       if (this.cardCount === 52) this.isGameDone = true;
     } else {
@@ -178,7 +178,7 @@ export default class CardField extends Vue {
       setTimeout(() => {
         this.deck[firstSelectedCardIndex].isOpen = false;
         this.deck[secondSelectedCardIndex].isOpen = false;
-      }, 2000);
+      }, 1500);
     }
   }
 }
@@ -199,7 +199,7 @@ export default class CardField extends Vue {
 }
 
 .done {
-  font-size: 24px;
+  font-size: 1.5rem;
   color: #4169e1;
 }
 
@@ -218,7 +218,7 @@ export default class CardField extends Vue {
   width: 57px;
   height: 89px;
   background-color: #eee;
-  font-size: 24px;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
