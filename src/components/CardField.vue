@@ -8,76 +8,46 @@
     <div class="card-field">
       <div class="card-container" v-for="card in deck" :key="card.id">
         <div
-          class="card card--red"
-          v-if="card.symbol === 'heart'"
+          class="card"
           @click="selectCard(card.id)"
-          v-bind:class="{
+          :class="{
+            'card--open': card.isOpen,
             'card--selected': card.isSelected
           }"
         >
           <transition>
-            <div class="card--filter" v-if="card.isRemoved"></div>
+            <div class="card--removed" v-if="card.isRemoved"></div>
           </transition>
-          <transition>
-            <div class="card__number" v-if="card.isOpen">{{ card.number }}</div>
-          </transition>
-          <transition>
-            <div class="card__symbol" v-if="card.isOpen">♥</div>
-          </transition>
-        </div>
-        <div
-          class="card card--red"
-          v-else-if="card.symbol === 'tile'"
-          @click="selectCard(card.id)"
-          v-bind:class="{
-            'card--selected': card.isSelected
-          }"
-        >
-          <transition>
-            <div class="card--filter" v-if="card.isRemoved"></div>
-          </transition>
-          <transition>
-            <div class="card__number" v-if="card.isOpen">{{ card.number }}</div>
-          </transition>
-          <transition>
-            <div class="card__symbol" v-if="card.isOpen">♦</div>
-          </transition>
-        </div>
-        <div
-          class="card card--black"
-          v-else-if="card.symbol === 'clover'"
-          @click="selectCard(card.id)"
-          v-bind:class="{
-            'card--selected': card.isSelected
-          }"
-        >
-          <transition>
-            <div class="card--filter" v-if="card.isRemoved"></div>
-          </transition>
-          <transition>
-            <div class="card__number" v-if="card.isOpen">{{ card.number }}</div>
-          </transition>
-          <transition>
-            <div class="card__symbol" v-if="card.isOpen">♣</div>
-          </transition>
-        </div>
-        <div
-          class="card card--black"
-          v-else
-          @click="selectCard(card.id)"
-          v-bind:class="{
-            'card--selected': card.isSelected
-          }"
-        >
-          <transition>
-            <div class="card--filter" v-if="card.isRemoved"></div>
-          </transition>
-          <transition>
-            <div class="card__number" v-if="card.isOpen">{{ card.number }}</div>
-          </transition>
-          <transition>
-            <div class="card__symbol" v-if="card.isOpen">♠</div>
-          </transition>
+          <div class="card__side card__side--back"></div>
+          <div class="card__side card__side--front">
+            <transition>
+              <div
+                class="card__number"
+                v-if="card.isOpen"
+                :class="{
+                  'card--red': card.symbol === 'heart' || card.symbol === 'tile',
+                  'card--black': card.symbol === 'clover' || card.symbol === 'pike'
+                }"
+              >
+                {{ card.number }}
+              </div>
+            </transition>
+            <transition>
+              <div
+                class="card__symbol"
+                v-if="card.isOpen"
+                :class="{
+                  'card--red': card.symbol === 'heart' || card.symbol === 'tile',
+                  'card--black': card.symbol === 'clover' || card.symbol === 'pike'
+                }"
+              >
+                <span v-if="card.symbol === 'heart'">♥</span>
+                <span v-else-if="card.symbol === 'tile'">♦</span>
+                <span v-else-if="card.symbol === 'clover'">♣</span>
+                <span v-else>♠</span>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
@@ -211,34 +181,78 @@ export default class CardField extends Vue {
 }
 
 .card-container {
-  margin: 0 10px 10px;
+  margin: 0 10px 20px;
 }
 
 .card {
+  position: relative;
   width: 57px;
   height: 89px;
-  background-color: #eee;
   font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
   cursor: pointer;
   user-select: none;
   box-sizing: border-box;
 }
 
-.card--filter {
+.card__side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: all 0.6s ease;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  border: 5px solid #fff;
+}
+
+.card__side--front {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fff;
+  transform: rotateY(180deg);
+}
+
+.card__side--back {
+  background-color: #cc1237;
+}
+
+.card--open .card__side--front {
+  transform: rotate(0);
+}
+
+.card--open .card__side--back {
+  transform: rotateY(-180deg);
+}
+
+.card--removed {
   position: absolute;
   width: 57px;
   height: 89px;
-  background-color: #fff;
+  background-color: #eee;
   cursor: default;
-  transition: 0.3s;
+  border-radius: 5px;
+  border: 5px solid #fff;
+  z-index: 100;
 }
 
-.card--selected {
-  border: 3px solid #4169e1;
+.card--selected .card__side--back {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    transform: rotate(45deg);
+    width: 12px;
+    height: 20px;
+    border-right: 5px solid #fff;
+    border-bottom: 5px solid #fff;
+  }
 }
 
 .card--black {
