@@ -9,6 +9,10 @@ export default new Vuex.Store({
     cardCount: 0
   },
   mutations: {
+    clearCounter(state) {
+      state.turnCount = 1;
+      state.cardCount = 0;
+    },
     addTurnCount(state) {
       state.turnCount += 1;
     },
@@ -17,6 +21,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    clearCounter({ commit }) {
+      commit("clearCounter");
+    },
     addTurnCount({ commit }) {
       commit("addTurnCount");
     },

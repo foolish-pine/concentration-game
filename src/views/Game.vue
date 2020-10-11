@@ -17,7 +17,11 @@ import CardField from "../components/CardField.vue";
     CardField
   }
 })
-export default class Game extends Vue {}
+export default class Game extends Vue {
+  created() {
+    this.$store.dispatch("clearCounter");
+  }
+}
 </script>
 
 <style lang="scss" scoped>
