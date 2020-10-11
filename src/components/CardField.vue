@@ -88,11 +88,11 @@ export default class CardField extends Vue {
       }
     }
     // カードの配列をシャッフルする
-    const cardNum = this.deck.length;
-    for (let i = cardNum - 1; i >= 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
-    }
+    // const cardNum = this.deck.length;
+    // for (let i = cardNum - 1; i >= 0; i--) {
+    //   const randomIndex = Math.floor(Math.random() * (i + 1));
+    //   [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
+    // }
   }
   private get turnCount(): number {
     return this.$store.getters.getTurnCount;
@@ -138,9 +138,9 @@ export default class CardField extends Vue {
         this.deck[secondSelectedCardIndex].isOpen = false;
         this.deck[firstSelectedCardIndex].isRemoved = true;
         this.deck[secondSelectedCardIndex].isRemoved = true;
+        // すべてのカードを取得したときゲーム終了
+        if (this.cardCount === 20) this.isGameDone = true;
       }, 1500);
-      // すべてのカードを取得したときゲーム終了
-      if (this.cardCount === 52) this.isGameDone = true;
     } else {
       // 2枚のカードの数字が一致しないとき
       // 経過ターン数を+1する
