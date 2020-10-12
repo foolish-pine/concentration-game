@@ -1,23 +1,22 @@
 <template>
   <div>
-    <CardField />
-    <div class="button-container">
-      <button @click="$router.go()">最初からやりなおす</button>
-      <button @click="$router.push('/')">ホームに戻る</button>
-    </div>
+    <ComMode />
+    <ButtonSet />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CardField from "../components/CardField.vue";
+import ComMode from "../components/ComMode.vue";
+import ButtonSet from "../components/ButtonSet.vue";
 
 @Component({
   components: {
-    CardField
+    ComMode,
+    ButtonSet
   }
 })
-export default class Game extends Vue {
+export default class Practice extends Vue {
   created() {
     this.$store.dispatch("clearCounter");
   }
