@@ -16,11 +16,7 @@ import ButtonSet from "../components/ButtonSet.vue";
     ButtonSet
   }
 })
-export default class Practice extends Vue {
-  created() {
-    this.$store.dispatch("clearCounter");
-  }
-}
+export default class Practice extends Vue {}
 </script>
 
 <style lang="scss" scoped>
