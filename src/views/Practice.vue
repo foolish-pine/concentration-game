@@ -1,18 +1,18 @@
 <template>
   <div>
-    <ComMode />
+    <PracticeMode />
     <ButtonSet />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ComMode from "../components/ComMode.vue";
+import PracticeMode from "../components/PracticeMode.vue";
 import ButtonSet from "../components/ButtonSet.vue";
 
 @Component({
   components: {
-    ComMode,
+    PracticeMode,
     ButtonSet
   }
 })

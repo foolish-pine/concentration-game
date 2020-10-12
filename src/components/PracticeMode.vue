@@ -3,7 +3,6 @@
     <div class="counter">
       <div class="turn-counter">経過ターン: {{ turnCount }}ターン</div>
       <div class="card-counter">取得カード: {{ cardCount }}枚 / 20枚</div>
-      <button class="test" @click="manipulateByCPU">CPUが操作（テスト用）</button>
       <div class="done" v-if="isGameDone">Done!!</div>
     </div>
     <div class="card-field">
@@ -154,59 +153,6 @@ export default class CardField extends Vue {
         this.deck[firstSelectedCardIndex].isOpen = false;
         this.deck[secondSelectedCardIndex].isOpen = false;
       }, 1500);
-    }
-  }
-
-  manipulateByCPU() {
-    const isCardOpen = this.deck.some(card => card.isOpen === true);
-    // 表になっているカードがあるときはこれ以上処理を行わない
-    if (isCardOpen) {
-      return;
-    }
-    // まだ誰にも取得されていないかつ一度でも表になったことがあるカードを抽出する
-    const revealedCards = this.deck.filter(card => !card.isRemoved && card.isRevealed);
-    // 上記のカード群の数字のうち、2回以上現れるものを抽出する
-    const duplicatedCardsNum = [
-      ...new Set(
-        revealedCards
-          .map(card => card.number)
-          .filter((number, index, array) => array.indexOf(number) !== array.lastIndexOf(number))
-      )
-    ];
-    if (duplicatedCardsNum.length > 0) {
-      // duplicatedCardsNumに要素が存在するとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在するとき)
-      // duplicatedCardsNumからランダムに数字をひとつ選ぶ
-      const pickedNum = duplicatedCardsNum[Math.floor(Math.random() * duplicatedCardsNum.length)];
-      // revealedCardsのうち、選択した数字をもつカードを抽出する
-      const selectableCards = revealedCards.filter(card => card.number === pickedNum);
-      // selectableCardsをシャッフルする
-      const cardNum = selectableCards.length;
-      for (let i = cardNum - 1; i >= 0; i--) {
-        const randomIndex = Math.floor(Math.random() * (i + 1));
-        [selectableCards[i], selectableCards[randomIndex]] = [selectableCards[randomIndex], selectableCards[i]];
-      }
-      const firstSelectedCardIndex = this.deck.findIndex(card => card.id === selectableCards[0].id);
-      const secondSelectedCardIndex = this.deck.findIndex(card => card.id === selectableCards[1].id);
-      this.deck[firstSelectedCardIndex].isOpen = true;
-      this.deck[secondSelectedCardIndex].isOpen = true;
-      this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
-    } else {
-      // duplicatedCardsNumに要素が存在しないとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在しないとき)
-      // まだ誰にも取得されていないかつ一度も表になっていないカードを抽出する
-      const notRemovedCards = this.deck.filter(card => !card.isRemoved && !card.isRevealed);
-      // notRemovedCardsをシャッフルする
-      const cardNum = notRemovedCards.length;
-      for (let i = cardNum - 1; i >= 0; i--) {
-        const randomIndex = Math.floor(Math.random() * (i + 1));
-        [notRemovedCards[i], notRemovedCards[randomIndex]] = [notRemovedCards[randomIndex], notRemovedCards[i]];
-      }
-      const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[0].id);
-      const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[1].id);
-      this.deck[firstSelectedCardIndex].isOpen = true;
-      this.deck[secondSelectedCardIndex].isOpen = true;
-      this.deck[firstSelectedCardIndex].isRevealed = true;
-      this.deck[secondSelectedCardIndex].isRevealed = true;
-      this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
     }
   }
 }

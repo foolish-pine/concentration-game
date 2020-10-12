@@ -1,21 +1,18 @@
 <template>
   <div>
-    <PracticeMode />
-    <div class="button-container">
-      <button @click="$router.go()">最初からやりなおす</button>
-      <button @click="$router.push('/')">ホームに戻る</button>
-    </div>
+    <ComMode />
+    <ButtonSet />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import PracticeMode from "../components/PracticeMode.vue";
+import ComMode from "../components/ComMode.vue";
 import ButtonSet from "../components/ButtonSet.vue";
 
 @Component({
   components: {
-    PracticeMode,
+    ComMode,
     ButtonSet
   }
 })
