@@ -176,8 +176,6 @@ export default class CardField extends Vue {
       }, 1500);
     } else {
       // 2枚のカードの数字が一致しないとき
-      // 経過ターン数を+1する
-      this.$store.dispatch("addTurnCount");
       setTimeout(() => {
         this.deck[firstSelectedCardIndex].isOpen = false;
         this.deck[secondSelectedCardIndex].isOpen = false;
@@ -372,12 +370,14 @@ export default class CardField extends Vue {
 
 .card--removed {
   position: absolute;
+  top: 0;
+  left: -5px;
   z-index: 100;
-  width: 57px;
-  height: 89px;
+  width: 67px;
+  height: 95px;
   cursor: default;
-  background-color: #eee;
-  border: 5px solid #fff;
+  background-color: #0d5b2b;
+  border: 5px solid #0d5b2b;
   border-radius: 5px;
 }
 
