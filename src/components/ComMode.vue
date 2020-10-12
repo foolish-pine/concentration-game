@@ -1,12 +1,16 @@
 <template>
   <div class="container">
     <div class="counter">
-      <div class="turn-dispaly">
-        <span class="you" v-if="!isComTurn">YOU</span><span class="com" v-else>COM</span> のターンです
+      <div class="turn-dispaly" v-if="!isPlayerWin && !isComWin && !isDraw">
+        <span class="you" v-if="!isComTurn">あなた</span><span class="com" v-else>COM</span> のターンです
+      </div>
+      <div class="result-dispaly" v-else>
+        <div class="result--player-win" v-if="isPlayerWin">あなたの勝ちです!!</div>
+        <div class="result--com-win" v-if="isComWin">COMの勝ちです!!</div>
+        <div v-if="isDraw">引き分けです</div>
       </div>
       <div class="card-counter"><span class="you">YOU</span>: {{ myCardCount }}枚</div>
       <div class="card-counter"><span class="com">COM</span>: {{ comCardCount }}枚</div>
-      <div class="done" v-if="isGameDone">Done!!</div>
     </div>
     <div class="card-field">
       <div class="card-container" v-for="card in deck" :key="card.id">
@@ -71,8 +75,13 @@ export default class CardField extends Vue {
     isRemoved: boolean;
     isRevealed: boolean;
   }[] = [];
+  myCardCount = 0;
+  comCardCount = 0;
+  isProcessing = false;
   isComTurn = false;
-  isGameDone = false;
+  isPlayerWin = false;
+  isComWin = false;
+  isDraw = false;
 
   created() {
     // トランプのカードの配列を生成する
@@ -101,27 +110,16 @@ export default class CardField extends Vue {
     }
   }
 
-  private get turnCount(): number {
-    return this.$store.getters.getTurnCount;
-  }
-
-  private get myCardCount(): number {
-    return this.$store.getters.getMyCardCount;
-  }
-
-  private get comCardCount(): number {
-    return this.$store.getters.getComCardCount;
-  }
-
   selectCard(cardId: number) {
+    if (this.isComTurn || this.isProcessing) return;
+    // まだ誰にも取得されていないかつ一度でも表になったことがあるカードを抽出する
     // 1番目に選択したカードのIndex
     const firstSelectedCardIndex = this.deck.findIndex(card => card.isSelected === true);
     // 2番目に選択したカードのIndex
     const secondSelectedCardIndex = this.deck.findIndex(card => card.id === cardId);
-    const isCardOpen = this.deck.some(card => card.isOpen === true);
 
-    // クリックしたカードが除去済み、もしくは表になっているカードがあるときはこれ以上処理を行わない
-    if (this.deck[secondSelectedCardIndex].isRemoved || isCardOpen) {
+    // クリックしたカードが除去済みのときはこれ以上処理を行わない
+    if (this.deck[secondSelectedCardIndex].isRemoved) {
       return;
     }
 
@@ -133,6 +131,7 @@ export default class CardField extends Vue {
       this.deck[secondSelectedCardIndex].isSelected = false;
     } else {
       // 1番目と2番目で異なるカードを選択したとき
+      this.isProcessing = true;
       this.deck[firstSelectedCardIndex].isOpen = true;
       this.deck[secondSelectedCardIndex].isOpen = true;
       this.deck[firstSelectedCardIndex].isRevealed = true;
@@ -148,9 +147,9 @@ export default class CardField extends Vue {
       // 2枚のカードの数字が一致するとき
       // 取得カードの枚数を+2する
       if (this.isComTurn) {
-        this.$store.dispatch("addComCardCount");
+        this.comCardCount += 2;
       } else {
-        this.$store.dispatch("addMyCardCount");
+        this.myCardCount += 2;
       }
       setTimeout(() => {
         this.deck[firstSelectedCardIndex].isOpen = false;
@@ -158,8 +157,20 @@ export default class CardField extends Vue {
         this.deck[firstSelectedCardIndex].isRemoved = true;
         this.deck[secondSelectedCardIndex].isRemoved = true;
         // すべてのカードを取得したときゲーム終了
-        if (this.myCardCount + this.comCardCount === 20) this.isGameDone = true;
+        if (this.myCardCount + this.comCardCount === 20) {
+          if (this.myCardCount > this.comCardCount) {
+            this.isPlayerWin = true;
+            return;
+          } else if (this.myCardCount < this.comCardCount) {
+            this.isComWin = true;
+            return;
+          } else {
+            this.isDraw = true;
+            return;
+          }
+        }
         setTimeout(() => {
+          this.isProcessing = false;
           this.manipulateByCOM();
         }, 1000);
       }, 1500);
@@ -171,6 +182,7 @@ export default class CardField extends Vue {
         this.deck[firstSelectedCardIndex].isOpen = false;
         this.deck[secondSelectedCardIndex].isOpen = false;
         setTimeout(() => {
+          this.isProcessing = false;
           this.isComTurn = !this.isComTurn;
           this.manipulateByCOM();
         }, 1000);
@@ -181,6 +193,7 @@ export default class CardField extends Vue {
   manipulateByCOM() {
     if (!this.isComTurn) return;
     // まだ誰にも取得されていないかつ一度でも表になったことがあるカードを抽出する
+    this.isProcessing = true;
     const revealedCards = this.deck.filter(card => !card.isRemoved && card.isRevealed);
     // 上記のカード群の数字のうち、2回以上現れるものを抽出する
     const duplicatedCardsNum = [
@@ -211,39 +224,38 @@ export default class CardField extends Vue {
       // duplicatedCardsNumに要素が存在しないとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在しないとき)
       // まだ誰にも取得されていないカードを抽出する
       const notRemovedCards = this.deck.filter(card => !card.isRemoved);
-      // まだ誰にも取得されていないカードのうち、一度でも表になったものを抽出
-      const notRemovedAndRevealedCards = notRemovedCards.filter(card => card.isRevealed);
-      if (notRemovedAndRevealedCards.length >= 2) {
-        // notRemovedAndRevealedCardsが2枚以上のとき
-        // notRemovedAndRevealedCardsをシャッフルする
-        const cardNum = notRemovedAndRevealedCards.length;
+      // まだ誰にも取得されていないカードのうち、一度も表になっていないものを抽出
+      const notRemovedAndNotRevealedCards = notRemovedCards.filter(card => !card.isRevealed);
+      if (notRemovedAndNotRevealedCards.length >= 2) {
+        // notRemovedAndNotRevealedCardsが2枚以上のとき
+        // notRemovedAndNotRevealedCardsをシャッフルする
+        const cardNum = notRemovedAndNotRevealedCards.length;
         for (let i = cardNum - 1; i >= 0; i--) {
           const randomIndex = Math.floor(Math.random() * (i + 1));
-          [notRemovedAndRevealedCards[i], notRemovedAndRevealedCards[randomIndex]] = [
-            notRemovedAndRevealedCards[randomIndex],
-            notRemovedAndRevealedCards[i]
+          [notRemovedAndNotRevealedCards[i], notRemovedAndNotRevealedCards[randomIndex]] = [
+            notRemovedAndNotRevealedCards[randomIndex],
+            notRemovedAndNotRevealedCards[i]
           ];
         }
-        // notRemovedAndRevealedCardsから2枚を選択する
-        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndRevealedCards[0].id);
-        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndRevealedCards[1].id);
+        // notRemovedAndNotRevealedCardsから2枚を選択する
+        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[0].id);
+        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[1].id);
         this.deck[firstSelectedCardIndex].isOpen = true;
         this.deck[secondSelectedCardIndex].isOpen = true;
         this.deck[firstSelectedCardIndex].isRevealed = true;
         this.deck[secondSelectedCardIndex].isRevealed = true;
         this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
-      } else if (notRemovedAndRevealedCards.length === 1) {
-        // notRemovedAndRevealedCardsが1枚のとき
-        // 1枚はnotRemovedAndRevealedCardsから選ぶ
-        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndRevealedCards[0].id);
-        // もう一枚はnotRemovedCardsから選ぶ
-        const secondSelectedCardIndex = this.deck.findIndex(card => {
-          let selected;
-          do {
-            selected = notRemovedCards[Math.floor(Math.random() * notRemovedCards.length)].id;
-          } while (selected === notRemovedAndRevealedCards[0].id);
-          card.id === selected;
-        });
+      } else if (notRemovedAndNotRevealedCards.length === 1) {
+        // notRemovedAndNotRevealedCardsが1枚のとき
+        // 選択する2枚のうち1枚はnotRemovedAndNotRevealedCardsから選ぶ
+        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[0].id);
+        // もう一枚はnotRemovedCardsからランダムに選び、1枚目と重複した場合は選びなおす
+        let selectedIndex: number;
+        do {
+          selectedIndex = Math.floor(Math.random() * notRemovedCards.length);
+        } while (notRemovedCards[selectedIndex].id === this.deck[firstSelectedCardIndex].id);
+        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[selectedIndex].id);
+
         this.deck[firstSelectedCardIndex].isOpen = true;
         this.deck[secondSelectedCardIndex].isOpen = true;
         this.deck[firstSelectedCardIndex].isRevealed = true;
@@ -289,9 +301,16 @@ export default class CardField extends Vue {
   font-weight: bold;
 }
 
-.done {
-  margin-top: 20px;
+.result-dispaly {
   font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.result--player-win {
+  color: #f00;
+}
+
+.result--com-win {
   color: #4169e1;
 }
 
