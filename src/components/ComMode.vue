@@ -209,21 +209,62 @@ export default class CardField extends Vue {
       this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
     } else {
       // duplicatedCardsNumに要素が存在しないとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在しないとき)
-      // まだ誰にも取得されていないかつ一度も表になっていないカードを抽出する
-      const notRemovedCards = this.deck.filter(card => !card.isRemoved && !card.isRevealed);
-      // notRemovedCardsをシャッフルする
-      const cardNum = notRemovedCards.length;
-      for (let i = cardNum - 1; i >= 0; i--) {
-        const randomIndex = Math.floor(Math.random() * (i + 1));
-        [notRemovedCards[i], notRemovedCards[randomIndex]] = [notRemovedCards[randomIndex], notRemovedCards[i]];
+      // まだ誰にも取得されていないカードを抽出する
+      const notRemovedCards = this.deck.filter(card => !card.isRemoved);
+      // まだ誰にも取得されていないカードのうち、一度でも表になったものを抽出
+      const notRemovedAndRevealedCards = notRemovedCards.filter(card => card.isRevealed);
+      if (notRemovedAndRevealedCards.length >= 2) {
+        // notRemovedAndRevealedCardsが2枚以上のとき
+        // notRemovedAndRevealedCardsをシャッフルする
+        const cardNum = notRemovedAndRevealedCards.length;
+        for (let i = cardNum - 1; i >= 0; i--) {
+          const randomIndex = Math.floor(Math.random() * (i + 1));
+          [notRemovedAndRevealedCards[i], notRemovedAndRevealedCards[randomIndex]] = [
+            notRemovedAndRevealedCards[randomIndex],
+            notRemovedAndRevealedCards[i]
+          ];
+        }
+        // notRemovedAndRevealedCardsから2枚を選択する
+        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndRevealedCards[0].id);
+        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndRevealedCards[1].id);
+        this.deck[firstSelectedCardIndex].isOpen = true;
+        this.deck[secondSelectedCardIndex].isOpen = true;
+        this.deck[firstSelectedCardIndex].isRevealed = true;
+        this.deck[secondSelectedCardIndex].isRevealed = true;
+        this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
+      } else if (notRemovedAndRevealedCards.length === 1) {
+        // notRemovedAndRevealedCardsが1枚のとき
+        // 1枚はnotRemovedAndRevealedCardsから選ぶ
+        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndRevealedCards[0].id);
+        // もう一枚はnotRemovedCardsから選ぶ
+        const secondSelectedCardIndex = this.deck.findIndex(card => {
+          let selected;
+          do {
+            selected = notRemovedCards[Math.floor(Math.random() * notRemovedCards.length)].id;
+          } while (selected === notRemovedAndRevealedCards[0].id);
+          card.id === selected;
+        });
+        this.deck[firstSelectedCardIndex].isOpen = true;
+        this.deck[secondSelectedCardIndex].isOpen = true;
+        this.deck[firstSelectedCardIndex].isRevealed = true;
+        this.deck[secondSelectedCardIndex].isRevealed = true;
+        this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
+      } else {
+        // notRemovedCardsをシャッフルする
+        const cardNum = notRemovedCards.length;
+        for (let i = cardNum - 1; i >= 0; i--) {
+          const randomIndex = Math.floor(Math.random() * (i + 1));
+          [notRemovedCards[i], notRemovedCards[randomIndex]] = [notRemovedCards[randomIndex], notRemovedCards[i]];
+        }
+        // notRemovedCardsから2枚を選択する
+        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[0].id);
+        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[1].id);
+        this.deck[firstSelectedCardIndex].isOpen = true;
+        this.deck[secondSelectedCardIndex].isOpen = true;
+        this.deck[firstSelectedCardIndex].isRevealed = true;
+        this.deck[secondSelectedCardIndex].isRevealed = true;
+        this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
       }
-      const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[0].id);
-      const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[1].id);
-      this.deck[firstSelectedCardIndex].isOpen = true;
-      this.deck[secondSelectedCardIndex].isOpen = true;
-      this.deck[firstSelectedCardIndex].isRevealed = true;
-      this.deck[secondSelectedCardIndex].isRevealed = true;
-      this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
     }
   }
 }
