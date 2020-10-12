@@ -68,6 +68,8 @@ export default class CardField extends Vue {
     isRemoved: boolean;
     isRevealed: boolean;
   }[] = [];
+  turnCount = 0;
+  cardCount = 0;
   isGameDone = false;
 
   created() {
@@ -95,14 +97,6 @@ export default class CardField extends Vue {
       const randomIndex = Math.floor(Math.random() * (i + 1));
       [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
     }
-  }
-
-  private get turnCount(): number {
-    return this.$store.getters.getTurnCount;
-  }
-
-  private get cardCount(): number {
-    return this.$store.getters.getCardCount;
   }
 
   selectCard(cardId: number) {
@@ -139,7 +133,7 @@ export default class CardField extends Vue {
     if (this.deck[firstSelectedCardIndex].number === this.deck[secondSelectedCardIndex].number) {
       // 2枚のカードの数字が一致するとき
       // 取得カードの枚数を+2する
-      this.$store.dispatch("addCardCount");
+      this.cardCount += 2;
       setTimeout(() => {
         this.deck[firstSelectedCardIndex].isOpen = false;
         this.deck[secondSelectedCardIndex].isOpen = false;
@@ -151,7 +145,7 @@ export default class CardField extends Vue {
     } else {
       // 2枚のカードの数字が一致しないとき
       // 経過ターン数を+1する
-      this.$store.dispatch("addTurnCount");
+      this.turnCount++;
       setTimeout(() => {
         this.deck[firstSelectedCardIndex].isOpen = false;
         this.deck[secondSelectedCardIndex].isOpen = false;
@@ -184,7 +178,10 @@ export default class CardField extends Vue {
   display: flex;
   flex-wrap: wrap;
   max-width: 800px;
+  padding: 50px 100px;
   margin: 0 auto;
+  background-color: #0d5b2b;
+  border-radius: 200px;
 }
 
 .card-container {

@@ -318,7 +318,10 @@ export default class CardField extends Vue {
   display: flex;
   flex-wrap: wrap;
   max-width: 800px;
+  padding: 50px 100px;
   margin: 0 auto;
+  background-color: #0d5b2b;
+  border-radius: 200px;
 }
 
 .card-container {
