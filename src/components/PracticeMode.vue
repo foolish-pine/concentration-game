@@ -66,6 +66,7 @@ export default class CardField extends Vue {
     isSelected: boolean;
     isOpen: boolean;
     isRemoved: boolean;
+    isRevealed: boolean;
   }[] = [];
   isGameDone = false;
 
@@ -81,25 +82,29 @@ export default class CardField extends Vue {
           symbol: symbols[j],
           isSelected: false,
           isOpen: false,
-          isRemoved: false
+          isRemoved: false,
+          isRevealed: false
         };
         this.deck.push(card);
         id++;
       }
     }
-    // カードの配列をシャッフルする
+    // カードの配列をシャッフルする;
     const cardNum = this.deck.length;
     for (let i = cardNum - 1; i >= 0; i--) {
       const randomIndex = Math.floor(Math.random() * (i + 1));
       [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
     }
   }
+
   private get turnCount(): number {
     return this.$store.getters.getTurnCount;
   }
+
   private get cardCount(): number {
     return this.$store.getters.getCardCount;
   }
+
   selectCard(cardId: number) {
     // 1番目に選択したカードのIndex
     const firstSelectedCardIndex = this.deck.findIndex(card => card.isSelected === true);
@@ -122,6 +127,8 @@ export default class CardField extends Vue {
       // 1番目と2番目で異なるカードを選択したとき
       this.deck[firstSelectedCardIndex].isOpen = true;
       this.deck[secondSelectedCardIndex].isOpen = true;
+      this.deck[firstSelectedCardIndex].isRevealed = true;
+      this.deck[secondSelectedCardIndex].isRevealed = true;
       this.deck[firstSelectedCardIndex].isSelected = false;
       this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
     }

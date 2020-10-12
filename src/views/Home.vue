@@ -1,8 +1,9 @@
 <template>
   <div class="title-container">
     <h1 class="title">神<br /><span></span>経<br /><span></span>衰<br /><span></span>弱</h1>
-    <div>
-      <button @click="$router.push('game')">ひとりでれんしゅう</button>
+    <div class="button-container">
+      <button @click="$router.push('practice')">ひとりでれんしゅう</button>
+      <button @click="$router.push('com')">コンピューターとたたかう</button>
     </div>
   </div>
 </template>
@@ -35,6 +36,16 @@ export default class Home extends Vue {}
     &:nth-of-type(3) {
       margin-left: 4.5em;
     }
+  }
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin: 50px auto 0;
+  button:nth-of-type(1) {
+    margin-bottom: 20px;
   }
 }
 </style>
