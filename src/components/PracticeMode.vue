@@ -96,12 +96,15 @@ export default class CardField extends Vue {
       [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
     }
   }
+
   private get turnCount(): number {
     return this.$store.getters.getTurnCount;
   }
+
   private get cardCount(): number {
     return this.$store.getters.getCardCount;
   }
+
   selectCard(cardId: number) {
     // 1番目に選択したカードのIndex
     const firstSelectedCardIndex = this.deck.findIndex(card => card.isSelected === true);
