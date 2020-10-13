@@ -1,7 +1,7 @@
 <template>
   <div class="button-container">
-    <button @click="$router.go()">最初からやりなおす</button>
-    <button @click="$router.push('/')">ホームに戻る</button>
+    <a class="button" @click="$router.go()">最初からやりなおす</a>
+    <a class="button" @click="$router.push('/')">ホームに戻る</a>
   </div>
 </template>
 
@@ -16,10 +16,19 @@ export default class ButtonSet extends Vue {}
 .button-container {
   display: flex;
   flex-direction: column;
-  width: 200px;
+  width: 250px;
   margin: 50px auto 0;
-  button:nth-of-type(1) {
+  .button:nth-of-type(1) {
     margin-bottom: 20px;
   }
+}
+
+.button {
+  padding: 15px 10px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 100vh;
 }
 </style>
