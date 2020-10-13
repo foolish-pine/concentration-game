@@ -195,80 +195,74 @@ export default class CardField extends Vue {
     }
   }
 
+  // COMのカード選択処理
   manipulateByCOM() {
+    // COMのターンでないならば処理を中断する
     if (!this.isComTurn) return;
-    // まだ誰にも取得されていないかつ一度でも表になったことがあるカードを抽出する
+
+    // isProcessingをtrueにし、プレイヤーがカードを選択できないようにする
     this.isProcessing = true;
+
+    // 誰にも取得されておらず、かつ一度でも表になったことがあるカードを抽出する
     const revealedCards = this.deck.filter(card => !card.isRemoved && card.isRevealed);
+
     // 上記のカード群の数字のうち、2回以上現れるものを抽出する
-    const duplicatedCardsNum = [
+    const acquirableCardNum = [
       ...new Set(
         revealedCards
           .map(card => card.number)
           .filter((number, index, array) => array.indexOf(number) !== array.lastIndexOf(number))
       )
     ];
-    if (duplicatedCardsNum.length > 0) {
-      // duplicatedCardsNumに要素が存在するとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在するとき)
-      // duplicatedCardsNumからランダムに数字をひとつ選ぶ
-      const pickedNum = duplicatedCardsNum[Math.floor(Math.random() * duplicatedCardsNum.length)];
+
+    if (acquirableCardNum.length > 0) {
+      // acquirableCardNumに要素が存在するとき( = 一度でも表になったことがあるカードの中に、取得可能なカードのペアが存在するとき)
+      // acquirableCardNumからランダムに数字をひとつ選ぶ
+      const selectedNum = acquirableCardNum[Math.floor(Math.random() * acquirableCardNum.length)];
+
       // revealedCardsのうち、選択した数字をもつカードを抽出する
-      const selectableCards = revealedCards.filter(card => card.number === pickedNum);
+      const selectableCards = revealedCards.filter(card => card.number === selectedNum);
+
       // selectableCardsをシャッフルする
-      const cardNum = selectableCards.length;
-      for (let i = cardNum - 1; i >= 0; i--) {
-        const randomIndex = Math.floor(Math.random() * (i + 1));
-        [selectableCards[i], selectableCards[randomIndex]] = [selectableCards[randomIndex], selectableCards[i]];
-      }
+      this.shuffleArray(selectableCards);
+
+      // 選択した2枚のカードのindex
       const firstSelectedCardIndex = this.deck.findIndex(card => card.id === selectableCards[0].id);
       const secondSelectedCardIndex = this.deck.findIndex(card => card.id === selectableCards[1].id);
+
+      // 選択したカードをオープンにし、数字が一致するか判定する
       this.deck[firstSelectedCardIndex].isOpen = true;
       this.deck[secondSelectedCardIndex].isOpen = true;
       this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
     } else {
-      // duplicatedCardsNumに要素が存在しないとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在しないとき)
-      // まだ誰にも取得されていないカードを抽出する
-      const notRemovedCards = this.deck.filter(card => !card.isRemoved);
-      // まだ誰にも取得されていないカードのうち、一度も表になっていないものを抽出
-      const notRemovedAndNotRevealedCards = notRemovedCards.filter(card => !card.isRevealed);
-      if (notRemovedAndNotRevealedCards.length >= 2) {
-        // notRemovedAndNotRevealedCardsが2枚以上のとき
-        // notRemovedAndNotRevealedCardsをシャッフルする
-        this.shuffleArray(notRemovedAndNotRevealedCards);
-        // notRemovedAndNotRevealedCardsから2枚を選択する
-        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[0].id);
-        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[1].id);
-        this.deck[firstSelectedCardIndex].isOpen = true;
-        this.deck[secondSelectedCardIndex].isOpen = true;
-        this.deck[firstSelectedCardIndex].isRevealed = true;
-        this.deck[secondSelectedCardIndex].isRevealed = true;
-        this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
-      } else if (notRemovedAndNotRevealedCards.length === 1) {
-        // notRemovedAndNotRevealedCardsが1枚のとき
-        // 選択する2枚のうち1枚はnotRemovedAndNotRevealedCardsから選ぶ
-        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[0].id);
-        // もう一枚はnotRemovedCardsからランダムに選び、1枚目と重複した場合は選びなおす
-        let selectedIndex: number;
-        do {
-          selectedIndex = Math.floor(Math.random() * notRemovedCards.length);
-        } while (notRemovedCards[selectedIndex].id === this.deck[firstSelectedCardIndex].id);
-        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[selectedIndex].id);
+      // acquirableCardNumに要素が存在しないとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在しないとき)
+      if (revealedCards.length > 0) {
+        // 誰にも取得されていないかつ一度でも表になったことがあるカードが1枚以上存在するとき
+        // revealedCardsからランダムに選んだカードのid
+        const firstSelectedCardId = revealedCards[Math.floor(Math.random() * revealedCards.length)].id;
+
+        // 誰にも取得されていないかつ一度も表になっていないカード群からランダムに選んだもののid
+        const secondSelectedCardId = this.deck.filter(card => !card.isRemoved && !card.isRevealed)[
+          Math.floor(Math.random() * revealedCards.length)
+        ].id;
+
+        const firstSelectedCardIndex = this.deck.findIndex(card => card.id === firstSelectedCardId);
+        const secondSelectedCardIndex = this.deck.findIndex(card => card.id === secondSelectedCardId);
 
         this.deck[firstSelectedCardIndex].isOpen = true;
         this.deck[secondSelectedCardIndex].isOpen = true;
-        this.deck[firstSelectedCardIndex].isRevealed = true;
-        this.deck[secondSelectedCardIndex].isRevealed = true;
         this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
       } else {
-        // notRemovedCardsをシャッフルする
+        // 誰にも取得されていないかつ一度でも表になったことがあるカードが1枚も存在しないとき
+        // まだ誰にも取得されていないカードを抽出し、シャッフルしたあと、そこからカードを2枚選ぶ
+        const notRemovedCards = this.deck.filter(card => !card.isRemoved);
         this.shuffleArray(notRemovedCards);
-        // notRemovedCardsから2枚を選択する
+
         const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[0].id);
         const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[1].id);
+
         this.deck[firstSelectedCardIndex].isOpen = true;
         this.deck[secondSelectedCardIndex].isOpen = true;
-        this.deck[firstSelectedCardIndex].isRevealed = true;
-        this.deck[secondSelectedCardIndex].isRevealed = true;
         this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
       }
     }
