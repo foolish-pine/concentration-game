@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="counter">
+    <div class="counter-container">
       <div class="turn-dispaly" v-if="!isPlayerWin && !isComWin && !isDraw">
         <span class="you" v-if="!isComTurn">あなた</span><span class="com" v-else>COM</span> のターンです
       </div>
@@ -9,7 +9,7 @@
         <div class="result--com-win" v-if="isComWin">COMの勝ちです!!</div>
         <div v-if="isDraw">引き分けです</div>
       </div>
-      <div class="card-counter"><span class="you">YOU</span>: {{ myCardCount }}枚</div>
+      <div class="card-counter"><span class="you">あなた</span>: {{ myCardCount }}枚</div>
       <div class="card-counter"><span class="com">COM</span>: {{ comCardCount }}枚</div>
     </div>
     <div class="card-field">
@@ -272,8 +272,16 @@ export default class CardField extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.counter {
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.counter-container {
+  padding: 20px;
   margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 100vh;
 }
 
 .you {
@@ -285,6 +293,7 @@ export default class CardField extends Vue {
 }
 
 .turn-dispaly {
+  margin-bottom: 10px;
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -302,14 +311,16 @@ export default class CardField extends Vue {
   color: #4169e1;
 }
 
+.card-counter {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 .card-field {
   display: flex;
   flex-wrap: wrap;
   max-width: 800px;
-  padding: 50px 100px;
   margin: 0 auto;
-  background-color: #0d5b2b;
-  border-radius: 200px;
 }
 
 .card-container {
@@ -395,15 +406,5 @@ export default class CardField extends Vue {
 
 .card--red {
   color: #f00;
-}
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.8s;
-}
-
-.v-enter,
-.v-leave-to {
-  opacity: 0;
 }
 </style>

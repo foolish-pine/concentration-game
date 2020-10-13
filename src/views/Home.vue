@@ -101,12 +101,16 @@ export default class Home extends Vue {
   font-family: "ＭＳ Ｐ明朝", "MS PMincho", sans-serif;
   font-size: 4rem;
   font-weight: bold;
+  .card:nth-child(1) {
+    color: #000;
+  }
   .card:nth-child(2) {
     margin-left: 1.5em;
     color: #f00;
   }
   .card:nth-child(3) {
     margin-left: 3em;
+    color: #000;
   }
   .card:nth-child(4) {
     margin-left: 4.5em;
@@ -175,15 +179,5 @@ export default class Home extends Vue {
   cursor: pointer;
   background-color: #fff;
   border-radius: 100vh;
-}
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.8s;
-}
-
-.v-enter,
-.v-leave-to {
-  opacity: 0;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="counter">
+    <div class="counter-container">
       <div class="turn-counter">経過ターン: {{ turnCount }}ターン</div>
-      <div class="card-counter">取得カード: {{ cardCount }}枚 / 20枚</div>
+      <div class="card-counter">取得枚数: {{ cardCount }} / 20枚</div>
       <div class="done" v-if="isGameDone">Done!!</div>
     </div>
     <div class="card-field">
@@ -157,16 +157,28 @@ export default class CardField extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.counter {
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.counter-container {
+  padding: 20px;
   margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 100vh;
 }
 
 .turn-counter {
   margin-bottom: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .card-counter {
   margin-bottom: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .done {
