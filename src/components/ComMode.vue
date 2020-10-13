@@ -64,17 +64,19 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
+interface Deck {
+  id: number;
+  number: number;
+  symbol: string;
+  isSelected: boolean;
+  isOpen: boolean;
+  isRemoved: boolean;
+  isRevealed: boolean;
+}
+
 @Component
 export default class CardField extends Vue {
-  deck: {
-    id: number;
-    number: number;
-    symbol: string;
-    isSelected: boolean;
-    isOpen: boolean;
-    isRemoved: boolean;
-    isRevealed: boolean;
-  }[] = [];
+  deck: Deck[] = [];
   myCardCount = 0;
   comCardCount = 0;
   isProcessing = false;
@@ -82,6 +84,15 @@ export default class CardField extends Vue {
   isPlayerWin = false;
   isComWin = false;
   isDraw = false;
+
+  //カードの配列をシャッフルする関数
+  shuffleArray(array: Deck[]) {
+    const cardNum = array.length;
+    for (let i = cardNum - 1; i >= 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    }
+  }
 
   created() {
     // トランプのカードの配列を生成する
@@ -103,11 +114,7 @@ export default class CardField extends Vue {
       }
     }
     // カードの配列をシャッフルする;
-    const cardNum = this.deck.length;
-    for (let i = cardNum - 1; i >= 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [this.deck[i], this.deck[randomIndex]] = [this.deck[randomIndex], this.deck[i]];
-    }
+    this.shuffleArray(this.deck);
   }
 
   selectCard(cardId: number) {
@@ -227,14 +234,7 @@ export default class CardField extends Vue {
       if (notRemovedAndNotRevealedCards.length >= 2) {
         // notRemovedAndNotRevealedCardsが2枚以上のとき
         // notRemovedAndNotRevealedCardsをシャッフルする
-        const cardNum = notRemovedAndNotRevealedCards.length;
-        for (let i = cardNum - 1; i >= 0; i--) {
-          const randomIndex = Math.floor(Math.random() * (i + 1));
-          [notRemovedAndNotRevealedCards[i], notRemovedAndNotRevealedCards[randomIndex]] = [
-            notRemovedAndNotRevealedCards[randomIndex],
-            notRemovedAndNotRevealedCards[i]
-          ];
-        }
+        this.shuffleArray(notRemovedAndNotRevealedCards);
         // notRemovedAndNotRevealedCardsから2枚を選択する
         const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[0].id);
         const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedAndNotRevealedCards[1].id);
@@ -261,11 +261,7 @@ export default class CardField extends Vue {
         this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
       } else {
         // notRemovedCardsをシャッフルする
-        const cardNum = notRemovedCards.length;
-        for (let i = cardNum - 1; i >= 0; i--) {
-          const randomIndex = Math.floor(Math.random() * (i + 1));
-          [notRemovedCards[i], notRemovedCards[randomIndex]] = [notRemovedCards[randomIndex], notRemovedCards[i]];
-        }
+        this.shuffleArray(notRemovedCards);
         // notRemovedCardsから2枚を選択する
         const firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[0].id);
         const secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[1].id);
