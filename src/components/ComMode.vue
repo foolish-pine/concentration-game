@@ -295,6 +295,7 @@ export default class CardField extends Vue {
 }
 
 .result-dispaly {
+  margin-bottom: 10px;
   font-size: 1.5rem;
   font-weight: bold;
 }
