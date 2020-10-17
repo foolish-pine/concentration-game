@@ -20,7 +20,8 @@ const routes: Array<RouteConfig> = [
   {
     path: "/com",
     name: "Com",
-    component: Com
+    component: Com,
+    props: true
   }
 ];
 

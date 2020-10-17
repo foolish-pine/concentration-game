@@ -1,12 +1,12 @@
 <template>
   <div>
-    <ComMode />
+    <ComMode :comLevel="comLevel" />
     <ButtonSet />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import ComMode from "../components/ComMode.vue";
 import ButtonSet from "../components/ButtonSet.vue";
 
@@ -16,7 +16,10 @@ import ButtonSet from "../components/ButtonSet.vue";
     ButtonSet
   }
 })
-export default class Practice extends Vue {}
+export default class Practice extends Vue {
+  @Prop()
+  comLevel!: number;
+}
 </script>
 
 <style lang="scss" scoped>

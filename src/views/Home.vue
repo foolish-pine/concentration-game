@@ -59,8 +59,10 @@
       </div>
     </div>
     <div class="button-container">
-      <a class="button" @click="$router.push('practice')">ひとりでれんしゅう</a>
-      <a class="button" @click="$router.push('com')">コンピューターとたたかう</a>
+      <a class="button" @click="$router.push('practice')">れんしゅう</a>
+      <a class="button" @click="$router.push({ name: 'Com', params: { comLevel: 1 } })">よわよわ</a>
+      <a class="button" @click="$router.push({ name: 'Com', params: { comLevel: 2 } })">ふつう</a>
+      <a class="button" @click="$router.push({ name: 'Com', params: { comLevel: 3 } })">つよつよ</a>
     </div>
   </div>
 </template>
@@ -168,6 +170,12 @@ export default class Home extends Vue {
   width: 250px;
   margin: 50px auto 0;
   .button:nth-of-type(1) {
+    margin-bottom: 20px;
+  }
+  .button:nth-of-type(2) {
+    margin-bottom: 20px;
+  }
+  .button:nth-of-type(3) {
     margin-bottom: 20px;
   }
 }
