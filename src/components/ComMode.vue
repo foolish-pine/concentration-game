@@ -87,6 +87,7 @@ export default class CardField extends Vue {
   comLevel!: number;
 
   deck: Card[] = [];
+  totalCards = 0;
   myCardCount = 0;
   comCardCount = 0;
   isProcessing = false;
@@ -123,6 +124,7 @@ export default class CardField extends Vue {
         id++;
       }
     }
+    this.totalCards = this.deck.length;
     // カードの配列をシャッフルする;
     this.shuffleArray(this.deck);
   }
@@ -174,7 +176,7 @@ export default class CardField extends Vue {
         this.deck[firstSelectedCardIndex].isRemoved = true;
         this.deck[secondSelectedCardIndex].isRemoved = true;
         // すべてのカードを取得したときゲーム終了
-        if (this.myCardCount + this.comCardCount === 20) {
+        if (this.myCardCount + this.comCardCount === this.totalCards) {
           if (this.myCardCount > this.comCardCount) {
             this.isPlayerWin = true;
             return;
@@ -190,7 +192,7 @@ export default class CardField extends Vue {
           this.isProcessing = false;
           this.manipulateByCOM();
         }, 1000);
-      }, 1500);
+      }, 1200);
     } else {
       // 2枚のカードの数字が一致しないとき
       setTimeout(() => {
@@ -296,8 +298,9 @@ export default class CardField extends Vue {
 .counter-container {
   padding: 20px;
   margin-bottom: 20px;
-  background-color: #fff;
-  border-radius: 100vh;
+  color: #333;
+  background-color: #eee;
+  border-radius: 5px;
 }
 
 .you {
@@ -337,6 +340,7 @@ export default class CardField extends Vue {
   display: flex;
   flex-wrap: wrap;
   max-width: 800px;
+  padding: 50px 100px;
   margin: 0 auto;
 }
 
@@ -418,7 +422,7 @@ export default class CardField extends Vue {
 }
 
 .card--black {
-  color: #000;
+  color: #333;
 }
 
 .card--red {

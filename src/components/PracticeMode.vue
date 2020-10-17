@@ -68,6 +68,7 @@ export default class CardField extends Vue {
     isRemoved: boolean;
     isRevealed: boolean;
   }[] = [];
+  totalCards = 0;
   turnCount = 0;
   cardCount = 0;
   isGameDone = false;
@@ -91,6 +92,7 @@ export default class CardField extends Vue {
         id++;
       }
     }
+    this.totalCards = this.deck.length;
     // カードの配列をシャッフルする;
     const cardNum = this.deck.length;
     for (let i = cardNum - 1; i >= 0; i--) {
@@ -140,8 +142,8 @@ export default class CardField extends Vue {
         this.deck[firstSelectedCardIndex].isRemoved = true;
         this.deck[secondSelectedCardIndex].isRemoved = true;
         // すべてのカードを取得したときゲーム終了
-        if (this.cardCount === 20) this.isGameDone = true;
-      }, 1500);
+        if (this.cardCount === this.totalCards) this.isGameDone = true;
+      }, 1200);
     } else {
       // 2枚のカードの数字が一致しないとき
       // 経過ターン数を+1する
@@ -149,7 +151,7 @@ export default class CardField extends Vue {
       setTimeout(() => {
         this.deck[firstSelectedCardIndex].isOpen = false;
         this.deck[secondSelectedCardIndex].isOpen = false;
-      }, 1500);
+      }, 1200);
     }
   }
 }
@@ -165,24 +167,27 @@ export default class CardField extends Vue {
 .counter-container {
   padding: 20px;
   margin-bottom: 20px;
-  background-color: #fff;
-  border-radius: 100vh;
+  background-color: #eee;
+  border-radius: 5px;
 }
 
 .turn-counter {
   margin-bottom: 5px;
   font-size: 1.5rem;
   font-weight: bold;
+  color: #333;
 }
 
 .card-counter {
   margin-bottom: 5px;
   font-size: 1.5rem;
   font-weight: bold;
+  color: #333;
 }
 
 .done {
   font-size: 1.5rem;
+  font-weight: bold;
   color: #4169e1;
 }
 
@@ -192,8 +197,6 @@ export default class CardField extends Vue {
   max-width: 800px;
   padding: 50px 100px;
   margin: 0 auto;
-  background-color: #0d5b2b;
-  border-radius: 200px;
 }
 
 .card-container {
@@ -274,7 +277,7 @@ export default class CardField extends Vue {
 }
 
 .card--black {
-  color: #000;
+  color: #333;
 }
 
 .card--red {
