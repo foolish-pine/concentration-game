@@ -256,27 +256,12 @@ export default class CardField extends Vue {
       secondSelectedCardIndex = this.deck.findIndex(card => card.id === selectableCards[1].id);
     } else {
       // acquirableCardNumに要素が存在しないとき( = 一度でも表になったことがあるカードの中に、取得可能なカードペアが存在しないとき)
-      if (revealedCards.length > 0) {
-        // 誰にも取得されていないかつ一度でも表になったことがあるカードが1枚以上存在するとき
-        // revealedCardsからランダムに選んだカードのid
-        const firstSelectedCardId = revealedCards[Math.floor(Math.random() * revealedCards.length)].id;
+      // まだ誰にも取得されていないカードを抽出し、シャッフルしたあと、そこからカードを2枚選ぶ
+      const notRemovedCards = this.deck.filter(card => !card.isRemoved);
+      this.shuffleArray(notRemovedCards);
 
-        // 誰にも取得されていないかつ一度も表になっていないカード群からランダムに選んだもののid
-        const secondSelectedCardId = this.deck.filter(card => !card.isRemoved && !card.isRevealed)[
-          Math.floor(Math.random() * revealedCards.length)
-        ].id;
-
-        firstSelectedCardIndex = this.deck.findIndex(card => card.id === firstSelectedCardId);
-        secondSelectedCardIndex = this.deck.findIndex(card => card.id === secondSelectedCardId);
-      } else {
-        // 誰にも取得されていないかつ一度でも表になったことがあるカードが1枚も存在しないとき
-        // まだ誰にも取得されていないカードを抽出し、シャッフルしたあと、そこからカードを2枚選ぶ
-        const notRemovedCards = this.deck.filter(card => !card.isRemoved);
-        this.shuffleArray(notRemovedCards);
-
-        firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[0].id);
-        secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[1].id);
-      }
+      firstSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[0].id);
+      secondSelectedCardIndex = this.deck.findIndex(card => card.id === notRemovedCards[1].id);
     }
     // 選択したカードをオープンにし、数字が一致するか判定する
     this.deck[firstSelectedCardIndex].isOpen = true;
