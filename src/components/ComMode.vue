@@ -10,7 +10,14 @@
         <div v-if="isDraw">引き分けです</div>
       </div>
       <div class="card-counter"><span class="you">あなた</span>: {{ myCardCount }}枚</div>
-      <div class="card-counter"><span class="com">COM</span>: {{ comCardCount }}枚</div>
+      <div class="card-counter">
+        <span class="com"
+          >COM
+          <span v-if="this.comLevel === 1"> (よわよわ)</span>
+          <span v-if="this.comLevel === 2"> (ふつう)</span>
+          <span v-if="this.comLevel === 3"> (つよつよ)</span> </span
+        >: {{ comCardCount }}枚
+      </div>
     </div>
     <div class="card-field">
       <div class="card-container" v-for="card in deck" :key="card.id">
@@ -62,9 +69,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
-interface Deck {
+interface Card {
   id: number;
   number: number;
   symbol: string;
@@ -76,7 +83,10 @@ interface Deck {
 
 @Component
 export default class CardField extends Vue {
-  deck: Deck[] = [];
+  @Prop()
+  comLevel!: number;
+
+  deck: Card[] = [];
   myCardCount = 0;
   comCardCount = 0;
   isProcessing = false;
@@ -86,7 +96,7 @@ export default class CardField extends Vue {
   isDraw = false;
 
   //カードの配列をシャッフルする関数
-  shuffleArray(array: Deck[]) {
+  shuffleArray(array: Card[]) {
     const cardNum = array.length;
     for (let i = cardNum - 1; i >= 0; i--) {
       const randomIndex = Math.floor(Math.random() * (i + 1));
@@ -98,7 +108,7 @@ export default class CardField extends Vue {
     // トランプのカードの配列を生成する
     let id = 0;
     const symbols = ["heart", "tile", "clover", "pike"];
-    for (let i = 1; i < 6; i++) {
+    for (let i = 1; i < 8; i++) {
       for (let j = 0; j < symbols.length; j++) {
         const card = {
           id: id,
@@ -218,7 +228,17 @@ export default class CardField extends Vue {
       )
     ];
 
-    if (acquirableCardNum.length > 0) {
+    const random = Math.random();
+    let isSmart: boolean;
+    if (this.comLevel === 1) {
+      isSmart = random < 0.1 ? true : false;
+    } else if (this.comLevel === 2) {
+      isSmart = random < 0.5 ? true : false;
+    } else {
+      isSmart = true;
+    }
+
+    if (acquirableCardNum.length > 0 && isSmart) {
       // acquirableCardNumに要素が存在するとき( = 一度でも表になったことがあるカードの中に、取得可能なカードのペアが存在するとき)
       // acquirableCardNumからランダムに数字をひとつ選ぶ
       const selectedNum = acquirableCardNum[Math.floor(Math.random() * acquirableCardNum.length)];
