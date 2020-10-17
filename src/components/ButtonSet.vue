@@ -24,11 +24,27 @@ export default class ButtonSet extends Vue {}
 }
 
 .button {
+  position: relative;
   padding: 15px 10px;
   font-weight: bold;
-  color: #000;
+  color: #333;
   cursor: pointer;
-  background-color: #fff;
-  border-radius: 100vh;
+  background-color: #eee;
+  border-radius: 5px;
+  &:hover {
+    &::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -30px;
+      box-sizing: border-box;
+      width: 20px;
+      height: 20px;
+      margin: auto;
+      content: "";
+      border: 10px solid transparent;
+      border-left: 14px solid #eee;
+    }
+  }
 }
 </style>

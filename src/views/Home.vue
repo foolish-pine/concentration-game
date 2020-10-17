@@ -59,8 +59,10 @@
       </div>
     </div>
     <div class="button-container">
-      <a class="button" @click="$router.push('practice')">ひとりでれんしゅう</a>
-      <a class="button" @click="$router.push('com')">コンピューターとたたかう</a>
+      <a class="button button--normal" @click="$router.push('practice')">れんしゅう</a>
+      <a class="button button--crayon" @click="$router.push({ name: 'Com', params: { comLevel: 1 } })">よわよわ</a>
+      <a class="button button--normal" @click="$router.push({ name: 'Com', params: { comLevel: 2 } })">ふつう</a>
+      <a class="button button--Gkktt" @click="$router.push({ name: 'Com', params: { comLevel: 3 } })">つよつよ</a>
     </div>
   </div>
 </template>
@@ -98,22 +100,20 @@ export default class Home extends Vue {
 }
 
 .title {
+  display: flex;
   font-family: "ＭＳ Ｐ明朝", "MS PMincho", sans-serif;
-  font-size: 4rem;
+  font-size: 4.5rem;
   font-weight: bold;
   .card:nth-child(1) {
-    color: #000;
+    color: #333;
   }
   .card:nth-child(2) {
-    margin-left: 1.5em;
     color: #f00;
   }
   .card:nth-child(3) {
-    margin-left: 3em;
-    color: #000;
+    color: #333;
   }
   .card:nth-child(4) {
-    margin-left: 4.5em;
     color: #f00;
   }
 }
@@ -121,9 +121,9 @@ export default class Home extends Vue {
 .card {
   position: relative;
   box-sizing: border-box;
-  width: 75px;
-  height: 105px;
-  margin-bottom: 20px;
+  width: 90px;
+  height: 115px;
+  margin: 0 15px 20px;
   user-select: none;
 }
 
@@ -165,19 +165,66 @@ export default class Home extends Vue {
 .button-container {
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 200px;
   margin: 50px auto 0;
   .button:nth-of-type(1) {
+    margin-bottom: 20px;
+  }
+  .button:nth-of-type(2) {
+    margin-bottom: 20px;
+  }
+  .button:nth-of-type(3) {
     margin-bottom: 20px;
   }
 }
 
 .button {
-  padding: 15px 10px;
-  font-weight: bold;
-  color: #000;
+  position: relative;
+  color: #333;
   cursor: pointer;
-  background-color: #fff;
-  border-radius: 100vh;
+  background-color: #eee;
+  border-radius: 5px;
+  &:hover {
+    &::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -30px;
+      box-sizing: border-box;
+      width: 20px;
+      height: 20px;
+      margin: auto;
+      content: "";
+      border: 10px solid transparent;
+      border-left: 14px solid #eee;
+    }
+  }
+}
+
+@font-face {
+  font-family: "crayon";
+  src: url(../assets/crayon.ttf);
+}
+
+@font-face {
+  font-family: "851 Gkktt";
+  src: url(../assets/851Gkktt.ttf);
+}
+
+.button--normal {
+  padding: 6px 0;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.button--crayon {
+  font-family: crayon, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 2.5rem;
+}
+
+.button--Gkktt {
+  padding: 7.5px 0;
+  font-family: "851 Gkktt", Avenir, Helvetica, Arial, sans-serif;
+  font-size: 2.2rem;
 }
 </style>
