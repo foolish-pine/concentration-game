@@ -59,10 +59,10 @@
       </div>
     </div>
     <div class="button-container">
-      <a class="button" @click="$router.push('practice')">れんしゅう</a>
-      <a class="button" @click="$router.push({ name: 'Com', params: { comLevel: 1 } })">よわよわ</a>
-      <a class="button" @click="$router.push({ name: 'Com', params: { comLevel: 2 } })">ふつう</a>
-      <a class="button" @click="$router.push({ name: 'Com', params: { comLevel: 3 } })">つよつよ</a>
+      <a class="button button--normal" @click="$router.push('practice')">練習</a>
+      <a class="button button--crayon" @click="$router.push({ name: 'Com', params: { comLevel: 1 } })">よわよわ</a>
+      <a class="button button--normal" @click="$router.push({ name: 'Com', params: { comLevel: 2 } })">ふつう</a>
+      <a class="button button--Gkktt" @click="$router.push({ name: 'Com', params: { comLevel: 3 } })">つよつよ</a>
     </div>
   </div>
 </template>
@@ -181,11 +181,36 @@ export default class Home extends Vue {
 }
 
 .button {
-  padding: 15px 10px;
   font-weight: bold;
   color: #000;
   cursor: pointer;
   background-color: #fff;
   border-radius: 100vh;
+}
+
+@font-face {
+  font-family: "crayon";
+  src: url(../assets/crayon.ttf);
+}
+
+@font-face {
+  font-family: "851 Gkktt";
+  src: url(../assets/851Gkktt.ttf);
+}
+
+.button--normal {
+  padding: 6px 0;
+  font-size: 1.6rem;
+}
+
+.button--crayon {
+  font-family: crayon, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 2.5rem;
+}
+
+.button--Gkktt {
+  padding: 7.5px 0;
+  font-family: "851 Gkktt", Avenir, Helvetica, Arial, sans-serif;
+  font-size: 2.2rem;
 }
 </style>
