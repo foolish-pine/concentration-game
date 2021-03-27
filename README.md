@@ -1,24 +1,34 @@
-# concentration-game
+# Vue.js製 神経衰弱ゲーム
+ブラウザで遊べる神経衰弱です。
+<br>
+<br>
+## デモ
+<img src="https://github.com/foolish-pine/concentration-game/wiki/concentration-game.gif" width="500">
+<br>
+<br>
 
-## Project setup
-```
-npm install
-```
+[こちら](https://concentration-game-foolish-pine.netlify.app/)で遊べます。
+<br>
+<br>
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## ポイント
+- Vue.jsで作成したブラウザ上で遊べる神経衰弱です。
+- 自分のみで遊ぶ練習モードと、コンピュータと対戦するモードがあります。
+- コンピュータの強さは「よわよわ」「ふつう」「つよつよ」の3つです。コンピュータは強さにより最適な行動（一度でも表になったカードのうち、ペアとなるカードがあればそれらを優先して選択する）を取る確率が変化します。「よわよわ」は10%、「ふつう」は50%、「つよつよ」は100%の確率で最適な行動を取ります。
+<br>
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## 制作者コメント
+ゲームのルールをアルゴリズムに落とし込むのは勉強になりますね。特にコンピュータ側の動作を実装するのはなかなか手ごわかったです。ただコードが冗長になってしまっている気もします。可読性の高い、わかりやすいコードを書くのは今後の課題です。
+<br>
+<br>
 
-### Lints and fixes files
-```
-npm run lint
-```
+## 制作に使用した言語・ツール
+TypeScript / Vue.js
+<br>
+<br>
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## 制作時間
+50時間
+<br>
+<br>
+
