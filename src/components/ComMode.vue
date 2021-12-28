@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="counter-container">
-      <div class="turn-dispaly" v-if="!isPlayerWin && !isComWin && !isDraw">
+      <div class="turn-display" v-if="!isPlayerWin && !isComWin && !isDraw">
         <span class="you" v-if="!isComTurn">あなた</span><span class="com" v-else>COM</span> のターンです
       </div>
-      <div class="result-dispaly" v-else>
+      <div class="result-display" v-else>
         <div class="result--player-win" v-if="isPlayerWin">あなたの勝ちです!!</div>
         <div class="result--com-win" v-if="isComWin">COMの勝ちです!!</div>
         <div v-if="isDraw">引き分けです</div>
@@ -273,7 +273,6 @@ export default class CardField extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .container {
   max-width: 1000px;
@@ -296,13 +295,13 @@ export default class CardField extends Vue {
   color: #4169e1;
 }
 
-.turn-dispaly {
+.turn-display {
   margin-bottom: 10px;
   font-size: 1.5rem;
   font-weight: bold;
 }
 
-.result-dispaly {
+.result-display {
   margin-bottom: 10px;
   font-size: 1.5rem;
   font-weight: bold;

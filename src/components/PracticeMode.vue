@@ -6,48 +6,48 @@
       <div class="done" v-if="isGameDone">Done!!</div>
     </div>
     <div class="card-field">
-      <div class="card-container" v-for="card in deck" :key="card.id">
-        <div
-          class="card"
-          @click="selectCard(card.id)"
-          :class="{
-            'card--open': card.isOpen,
-            'card--selected': card.isSelected
-          }"
-        >
+      <div
+        v-for="card in deck"
+        :key="card.id"
+        class="card"
+        @click="selectCard(card.id)"
+        :class="{
+          'card--open': card.isOpen,
+          'card--selected': card.isSelected
+        }"
+      >
+        <transition>
+          <div class="card--removed" v-if="card.isRemoved"></div>
+        </transition>
+        <div class="card__side card__side--back"></div>
+        <div class="card__side card__side--front">
           <transition>
-            <div class="card--removed" v-if="card.isRemoved"></div>
+            <div
+              class="card__number"
+              v-if="card.isOpen"
+              :class="{
+                'card--red': card.symbol === 'heart' || card.symbol === 'tile',
+                'card--black': card.symbol === 'clover' || card.symbol === 'pike'
+              }"
+            >
+              {{ card.number }}
+            </div>
           </transition>
-          <div class="card__side card__side--back"></div>
-          <div class="card__side card__side--front">
-            <transition>
-              <div
-                class="card__number"
-                v-if="card.isOpen"
-                :class="{
-                  'card--red': card.symbol === 'heart' || card.symbol === 'tile',
-                  'card--black': card.symbol === 'clover' || card.symbol === 'pike'
-                }"
-              >
-                {{ card.number }}
-              </div>
-            </transition>
-            <transition>
-              <div
-                class="card__symbol"
-                v-if="card.isOpen"
-                :class="{
-                  'card--red': card.symbol === 'heart' || card.symbol === 'tile',
-                  'card--black': card.symbol === 'clover' || card.symbol === 'pike'
-                }"
-              >
-                <span v-if="card.symbol === 'heart'">♥</span>
-                <span v-else-if="card.symbol === 'tile'">♦</span>
-                <span v-else-if="card.symbol === 'clover'">♣</span>
-                <span v-else>♠</span>
-              </div>
-            </transition>
-          </div>
+          <transition>
+            <div
+              class="card__symbol"
+              v-if="card.isOpen"
+              :class="{
+                'card--red': card.symbol === 'heart' || card.symbol === 'tile',
+                'card--black': card.symbol === 'clover' || card.symbol === 'pike'
+              }"
+            >
+              <span v-if="card.symbol === 'heart'">♥</span>
+              <span v-else-if="card.symbol === 'tile'">♦</span>
+              <span v-else-if="card.symbol === 'clover'">♣</span>
+              <span v-else>♠</span>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -173,16 +173,19 @@ export default class CardField extends Vue {
 
 .turn-counter {
   margin-bottom: 5px;
-  font-size: 1.5rem;
+  margin-bottom: 16px;
+  font-size: 2rem;
   font-weight: bold;
   color: #333;
+  text-align: center;
 }
 
 .card-counter {
   margin-bottom: 5px;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #333;
+  text-align: center;
 }
 
 .done {
@@ -194,13 +197,10 @@ export default class CardField extends Vue {
 .card-field {
   display: flex;
   flex-wrap: wrap;
+  gap: 20px 10px;
   max-width: 800px;
   padding: 50px 100px;
   margin: 0 auto;
-}
-
-.card-container {
-  margin: 0 10px 20px;
 }
 
 .card {

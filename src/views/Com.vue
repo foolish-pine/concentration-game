@@ -21,15 +21,3 @@ export default class Practice extends Vue {
   comLevel!: number;
 }
 </script>
-
-<style lang="scss" scoped>
-.button-container {
-  display: flex;
-  flex-direction: column;
-  width: 200px;
-  margin: 50px auto 0;
-  button:nth-of-type(1) {
-    margin-bottom: 20px;
-  }
-}
-</style>
