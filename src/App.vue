@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <main id="app" class="main">
     <router-view />
-  </div>
+  </main>
 </template>
 
 <script lang="ts">
@@ -16,12 +16,11 @@ export default class App extends Vue {}
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 50px;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  color: #2c3e50;
-  text-align: center;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "DotGothic16", sans-serif;
+}
+
+.main {
+  padding-top: 50px;
 }
 
 .v-enter-active,

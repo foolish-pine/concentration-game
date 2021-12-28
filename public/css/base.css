@@ -1,0 +1,56 @@
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-size: 62.5%;
+  text-size-adjust: 100%;
+}
+
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+
+body {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+main {
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  appearance: none;
+}
+
+a {
+  color: inherit;
+}
+
+li {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+iframe {
+  width: 100%;
+  border: none;
+}
+
+address {
+  font-style: normal;
+}
