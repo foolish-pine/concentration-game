@@ -1,6 +1,6 @@
 <template>
   <div class="button-container">
-    <a class="button" @click="$router.go()">最初からやりなおす</a>
+    <a class="button" @click="$router.go()">やりなおす</a>
     <a class="button" @click="$router.push('/')">ホームに戻る</a>
   </div>
 </template>
