@@ -12,8 +12,7 @@
         class="card"
         @click="selectCard(card.id)"
         :class="{
-          'card--open': card.isOpen,
-          'card--selected': card.isSelected
+          'card--open': card.isOpen
         }"
       >
         <transition>
@@ -63,7 +62,6 @@ export default class CardField extends Vue {
     id: number;
     number: number;
     symbol: string;
-    isSelected: boolean;
     isOpen: boolean;
     isRemoved: boolean;
     isRevealed: boolean;
@@ -83,7 +81,6 @@ export default class CardField extends Vue {
           id: id,
           number: i,
           symbol: symbols[j],
-          isSelected: false,
           isOpen: false,
           isRemoved: false,
           isRevealed: false
@@ -102,45 +99,44 @@ export default class CardField extends Vue {
   }
 
   selectCard(cardId: number) {
-    // 1番目に選択したカードのIndex
-    const firstSelectedCardIndex = this.deck.findIndex(card => card.isSelected === true);
-    // 2番目に選択したカードのIndex
-    const secondSelectedCardIndex = this.deck.findIndex(card => card.id === cardId);
-    const isCardOpen = this.deck.some(card => card.isOpen === true);
+    // 前に選択したカードのIndex
+    const previousSelectedCardIndex = this.deck.findIndex(card => card.isOpen);
+    // 選択したカードのIndex
+    const currentSelectedCardIndex = this.deck.findIndex(card => card.id === cardId);
+    const isProcessing = this.deck.filter(card => card.isOpen).length === 2;
 
-    // クリックしたカードが除去済み、もしくは表になっているカードがあるときはこれ以上処理を行わない
-    if (this.deck[secondSelectedCardIndex].isRemoved || isCardOpen) {
+    // クリックしたカードが除去済みのとき、または同じカードを選択したときはこれ以上処理を行わない
+    if (
+      this.deck[currentSelectedCardIndex].isRemoved ||
+      previousSelectedCardIndex === currentSelectedCardIndex ||
+      isProcessing
+    ) {
       return;
     }
 
-    if (firstSelectedCardIndex === -1) {
-      // 1番目のカードを選択したとき
-      this.deck[secondSelectedCardIndex].isSelected = true;
-    } else if (firstSelectedCardIndex === secondSelectedCardIndex) {
-      // 1番目と2番目で同じカードを選択したとき
-      this.deck[secondSelectedCardIndex].isSelected = false;
+    if (previousSelectedCardIndex === -1) {
+      // 前に選択したカードが存在しないとき（＝1番目のカードを選択したとき）
+      this.deck[currentSelectedCardIndex].isOpen = true;
+      this.deck[currentSelectedCardIndex].isRevealed = true;
     } else {
-      // 1番目と2番目で異なるカードを選択したとき
-      this.deck[firstSelectedCardIndex].isOpen = true;
-      this.deck[secondSelectedCardIndex].isOpen = true;
-      this.deck[firstSelectedCardIndex].isRevealed = true;
-      this.deck[secondSelectedCardIndex].isRevealed = true;
-      this.deck[firstSelectedCardIndex].isSelected = false;
-      this.checkCardNumber(firstSelectedCardIndex, secondSelectedCardIndex);
+      // 2番目のカードを選択したとき
+      this.deck[currentSelectedCardIndex].isOpen = true;
+      this.deck[currentSelectedCardIndex].isRevealed = true;
+      this.checkCardNumber(previousSelectedCardIndex, currentSelectedCardIndex);
     }
   }
 
   // 表にしたカードの数字が一致するかどうかチェックする
-  checkCardNumber(firstSelectedCardIndex: number, secondSelectedCardIndex: number) {
-    if (this.deck[firstSelectedCardIndex].number === this.deck[secondSelectedCardIndex].number) {
+  checkCardNumber(previousSelectedCardIndex: number, currentSelectedCardIndex: number) {
+    if (this.deck[previousSelectedCardIndex].number === this.deck[currentSelectedCardIndex].number) {
       // 2枚のカードの数字が一致するとき
       // 取得カードの枚数を+2する
       this.cardCount += 2;
       setTimeout(() => {
-        this.deck[firstSelectedCardIndex].isOpen = false;
-        this.deck[secondSelectedCardIndex].isOpen = false;
-        this.deck[firstSelectedCardIndex].isRemoved = true;
-        this.deck[secondSelectedCardIndex].isRemoved = true;
+        this.deck[previousSelectedCardIndex].isOpen = false;
+        this.deck[currentSelectedCardIndex].isOpen = false;
+        this.deck[previousSelectedCardIndex].isRemoved = true;
+        this.deck[currentSelectedCardIndex].isRemoved = true;
         // すべてのカードを取得したときゲーム終了
         if (this.cardCount === this.totalCards) this.isGameDone = true;
       }, 1200);
@@ -149,8 +145,8 @@ export default class CardField extends Vue {
       // 経過ターン数を+1する
       this.turnCount++;
       setTimeout(() => {
-        this.deck[firstSelectedCardIndex].isOpen = false;
-        this.deck[secondSelectedCardIndex].isOpen = false;
+        this.deck[previousSelectedCardIndex].isOpen = false;
+        this.deck[currentSelectedCardIndex].isOpen = false;
       }, 1200);
     }
   }
@@ -182,6 +178,7 @@ export default class CardField extends Vue {
 
 .card-counter {
   margin-bottom: 5px;
+  margin-bottom: 16px;
   font-size: 2rem;
   font-weight: bold;
   color: #333;
@@ -189,9 +186,10 @@ export default class CardField extends Vue {
 }
 
 .done {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #4169e1;
+  text-align: center;
 }
 
 .card-field {
@@ -208,9 +206,14 @@ export default class CardField extends Vue {
   box-sizing: border-box;
   width: 57px;
   height: 89px;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
   cursor: pointer;
   user-select: none;
+}
+
+.card__number {
+  margin-bottom: 8px;
 }
 
 .card__side {
@@ -256,24 +259,6 @@ export default class CardField extends Vue {
   background-color: #0d5b2b;
   border: 5px solid #0d5b2b;
   border-radius: 5px;
-}
-
-.card--selected .card__side--back {
-  position: relative;
-  &::before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 12px;
-    height: 20px;
-    margin: auto;
-    content: "";
-    border-right: 5px solid #fff;
-    border-bottom: 5px solid #fff;
-    transform: rotate(45deg);
-  }
 }
 
 .card--black {
