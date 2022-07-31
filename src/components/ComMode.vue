@@ -296,15 +296,19 @@ export default class CardField extends Vue {
 }
 
 .turn-display {
-  margin-bottom: 10px;
-  font-size: 1.5rem;
+  margin-bottom: 16px;
+  font-size: 2rem;
   font-weight: bold;
+  color: #333;
+  text-align: center;
 }
 
 .result-display {
-  margin-bottom: 10px;
-  font-size: 1.5rem;
+  margin-bottom: 16px;
+  font-size: 2rem;
   font-weight: bold;
+  color: #333;
+  text-align: center;
 }
 
 .result--player-win {
@@ -316,8 +320,11 @@ export default class CardField extends Vue {
 }
 
 .card-counter {
-  font-size: 1.5rem;
+  margin-bottom: 16px;
+  font-size: 2rem;
   font-weight: bold;
+  color: #333;
+  text-align: center;
 }
 
 .card-field {

@@ -168,7 +168,6 @@ export default class CardField extends Vue {
 }
 
 .turn-counter {
-  margin-bottom: 5px;
   margin-bottom: 16px;
   font-size: 2rem;
   font-weight: bold;
@@ -177,7 +176,6 @@ export default class CardField extends Vue {
 }
 
 .card-counter {
-  margin-bottom: 5px;
   margin-bottom: 16px;
   font-size: 2rem;
   font-weight: bold;
