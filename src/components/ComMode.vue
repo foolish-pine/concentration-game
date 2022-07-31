@@ -323,7 +323,7 @@ export default class CardField extends Vue {
 .card-field {
   display: flex;
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 820px;
   padding: 50px 100px;
   margin: 0 auto;
 }

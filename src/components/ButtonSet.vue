@@ -18,7 +18,7 @@ export default class ButtonSet extends Vue {}
   flex-direction: column;
   gap: 20px;
   width: 200px;
-  margin: 50px auto 0;
+  margin: 0 auto;
 }
 
 .button {

@@ -24,7 +24,7 @@ export default class Practice extends Vue {}
   display: flex;
   flex-direction: column;
   width: 200px;
-  margin: 50px auto 0;
+  margin: 0 auto;
   button:nth-of-type(1) {
     margin-bottom: 20px;
   }
