@@ -10,14 +10,7 @@
         <div v-if="isDraw">引き分けです</div>
       </div>
       <div class="card-counter"><span class="you">あなた</span>: {{ myCardCount }}枚</div>
-      <div class="card-counter">
-        <span class="com"
-          >COM
-          <span v-if="this.comLevel === 1"> (よわよわ)</span>
-          <span v-if="this.comLevel === 2"> (ふつう)</span>
-          <span v-if="this.comLevel === 3"> (つよつよ)</span> </span
-        >: {{ comCardCount }}枚
-      </div>
+      <div class="card-counter"><span class="com">COM </span>: {{ comCardCount }}枚</div>
     </div>
     <div class="card-field">
       <div class="card-container" v-for="card in deck" :key="card.id">
